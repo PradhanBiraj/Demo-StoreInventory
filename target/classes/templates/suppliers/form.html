@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${formTitle}">Supplier Form</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+
+    <div class="nav">
+        <a th:href="@{/dashboard}">Dashboard</a>
+        <a th:href="@{/suppliers}">Back to Suppliers</a>
+        <a th:href="@{/logout}" class="logout-link">Logout</a>
+    </div>
+
+    <h1 th:text="${formTitle}">Supplier</h1>
+
+    <form th:object="${supplier}"
+        th:action="${supplier.id} != null ? @{'/suppliers/update/' + ${supplier.id}} : @{/suppliers}" method="post">
+
+        <label for="name">Name</label>
+        <input type="text" id="name" th:field="*{name}" required />
+
+        <label for="contactPerson">Contact Person</label>
+        <input type="text" id="contactPerson" th:field="*{contactPerson}" />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" th:field="*{email}" />
+
+        <label for="phone">Phone</label>
+        <input type="text" id="phone" th:field="*{phone}" />
+
+        <label for="address">Address</label>
+        <textarea id="address" th:field="*{address}" rows="3"></textarea>
+
+        <button type="submit">Save</button>
+    </form>
+
+</body>
+
+</html>

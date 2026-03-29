@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Stock History</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+    <div th:replace="~{fragments/nav :: navbar}"></div>
+
+    <h1>Stock History - <span th:text="${item.name}">Item</span></h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Quantity</th>
+                <th>Reason</th>
+                <th>Performed By</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:if="${#lists.isEmpty(movements)}">
+                <td colspan="5">No stock movements yet.</td>
+            </tr>
+            <tr th:each="mov : ${movements}">
+                <td th:text="${mov.type}">IN</td>
+                <td th:text="${mov.quantity}">0</td>
+                <td th:text="${mov.reason}">reason</td>
+                <td th:text="${mov.performedBy != null ? mov.performedBy.username : '—'}">user</td>
+                <td th:text="${mov.createdAt}">2026-02-11</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+
+</html>
