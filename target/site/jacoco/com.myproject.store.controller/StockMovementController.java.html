@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StockMovementController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inventory-store</a> &gt; <a href="index.source.html" class="el_package">com.myproject.store.controller</a> &gt; <span class="el_source">StockMovementController.java</span></div><h1>StockMovementController.java</h1><pre class="source lang-java linenums">package com.myproject.store.controller;
+
+import com.myproject.store.model.Item;
+import com.myproject.store.model.StockMovement;
+import com.myproject.store.service.ItemService;
+import com.myproject.store.service.StockMovementService;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping(&quot;/stock&quot;)
+public class StockMovementController {
+
+    private final StockMovementService stockMovementService;
+    private final ItemService itemService;
+
+    public StockMovementController(StockMovementService stockMovementService,
+<span class="fc" id="L22">            ItemService itemService) {</span>
+<span class="fc" id="L23">        this.stockMovementService = stockMovementService;</span>
+<span class="fc" id="L24">        this.itemService = itemService;</span>
+<span class="fc" id="L25">    }</span>
+
+    @GetMapping(&quot;/in/{itemId}&quot;)
+    public String showStockInForm(@PathVariable Long itemId, Model model) {
+<span class="fc" id="L29">        Item item = itemService.findById(itemId);</span>
+<span class="fc" id="L30">        model.addAttribute(&quot;item&quot;, item);</span>
+<span class="fc" id="L31">        model.addAttribute(&quot;type&quot;, &quot;IN&quot;);</span>
+<span class="fc" id="L32">        return &quot;stock/stock_in_form&quot;;</span>
+    }
+
+    @PostMapping(&quot;/in/{itemId}&quot;)
+    public String handleStockIn(@PathVariable Long itemId,
+            @RequestParam(&quot;quantity&quot;) int quantity,
+            @RequestParam(value = &quot;reason&quot;, required = false) String reason,
+            Authentication authentication) {
+<span class="fc" id="L40">        Item item = itemService.findById(itemId);</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">        String username = authentication != null ? authentication.getName() : null;</span>
+<span class="fc" id="L42">        stockMovementService.recordStockIn(item, quantity, reason, username);</span>
+<span class="fc" id="L43">        return &quot;redirect:/items&quot;;</span>
+    }
+
+    @GetMapping(&quot;/out/{itemId}&quot;)
+    public String showStockOutForm(@PathVariable Long itemId, Model model) {
+<span class="fc" id="L48">        Item item = itemService.findById(itemId);</span>
+<span class="fc" id="L49">        model.addAttribute(&quot;item&quot;, item);</span>
+<span class="fc" id="L50">        model.addAttribute(&quot;type&quot;, &quot;OUT&quot;);</span>
+<span class="fc" id="L51">        return &quot;stock/stock_out_form&quot;;</span>
+    }
+
+    @PostMapping(&quot;/out/{itemId}&quot;)
+    public String handleStockOut(@PathVariable Long itemId,
+            @RequestParam(&quot;quantity&quot;) int quantity,
+            @RequestParam(value = &quot;reason&quot;, required = false) String reason,
+            Authentication authentication,
+            Model model) {
+<span class="fc" id="L60">        Item item = itemService.findById(itemId);</span>
+        try {
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">            String username = authentication != null ? authentication.getName() : null;</span>
+<span class="fc" id="L63">            stockMovementService.recordStockOut(item, quantity, reason, username);</span>
+<span class="fc" id="L64">            return &quot;redirect:/items&quot;;</span>
+<span class="fc" id="L65">        } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L66">            model.addAttribute(&quot;item&quot;, item);</span>
+<span class="fc" id="L67">            model.addAttribute(&quot;type&quot;, &quot;OUT&quot;);</span>
+<span class="fc" id="L68">            model.addAttribute(&quot;error&quot;, e.getMessage());</span>
+<span class="fc" id="L69">            return &quot;stock/stock_out_form&quot;;</span>
+        }
+    }
+
+    @GetMapping(&quot;/history/{itemId}&quot;)
+    public String viewHistory(@PathVariable Long itemId, Model model) {
+<span class="fc" id="L75">        Item item = itemService.findById(itemId);</span>
+<span class="fc" id="L76">        List&lt;StockMovement&gt; movements = stockMovementService.getMovementsForItem(item);</span>
+<span class="fc" id="L77">        model.addAttribute(&quot;item&quot;, item);</span>
+<span class="fc" id="L78">        model.addAttribute(&quot;movements&quot;, movements);</span>
+<span class="fc" id="L79">        return &quot;stock/history&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

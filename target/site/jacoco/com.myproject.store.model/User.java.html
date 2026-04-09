@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inventory-store</a> &gt; <a href="index.source.html" class="el_package">com.myproject.store.model</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package com.myproject.store.model;
+
+import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = &quot;users&quot;)
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 100)
+    private String username;
+
+    @Column(nullable = false)
+    private String password; // BCrypt hash
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String contact;
+
+<span class="pc" id="L30">    @Column(nullable = false)</span>
+    private boolean enabled = true;
+
+<span class="pc" id="L33">    @ManyToMany(fetch = FetchType.EAGER)</span>
+    @JoinTable(name = &quot;users_roles&quot;, joinColumns = @JoinColumn(name = &quot;user_id&quot;), inverseJoinColumns = @JoinColumn(name = &quot;role_id&quot;))
+    private Set&lt;Role&gt; roles = new HashSet&lt;&gt;();
+
+<span class="fc" id="L37">    public User() {</span>
+<span class="fc" id="L38">    }</span>
+
+<span class="nc" id="L40">    public User(String username, String password, String name, String email, String contact, boolean enabled) {</span>
+<span class="nc" id="L41">        this.username = username;</span>
+<span class="nc" id="L42">        this.password = password;</span>
+<span class="nc" id="L43">        this.name = name;</span>
+<span class="nc" id="L44">        this.email = email;</span>
+<span class="nc" id="L45">        this.contact = contact;</span>
+<span class="nc" id="L46">        this.enabled = enabled;</span>
+<span class="nc" id="L47">    }</span>
+
+    // ===== Getters / Setters =====
+
+    public Long getId() {
+<span class="fc" id="L52">        return id;</span>
+    }
+
+    public String getUsername() {
+<span class="fc" id="L56">        return username;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L60">        this.id = id;</span>
+<span class="fc" id="L61">    }</span>
+
+    public void setUsername(String username) {
+<span class="fc" id="L64">        this.username = username;</span>
+<span class="fc" id="L65">    }</span>
+
+    public String getPassword() {
+<span class="fc" id="L68">        return password;</span>
+    }
+
+    public void setPassword(String password) {
+<span class="fc" id="L72">        this.password = password;</span>
+<span class="fc" id="L73">    }</span>
+
+    public String getName() {
+<span class="fc" id="L76">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="fc" id="L80">        this.name = name;</span>
+<span class="fc" id="L81">    }</span>
+
+    public String getEmail() {
+<span class="fc" id="L84">        return email;</span>
+    }
+
+    public void setEmail(String email) {
+<span class="fc" id="L88">        this.email = email;</span>
+<span class="fc" id="L89">    }</span>
+
+    public String getContact() {
+<span class="fc" id="L92">        return contact;</span>
+    }
+
+    public void setContact(String contact) {
+<span class="fc" id="L96">        this.contact = contact;</span>
+<span class="fc" id="L97">    }</span>
+
+    public boolean isEnabled() {
+<span class="fc" id="L100">        return enabled;</span>
+    }
+
+    public void setEnabled(boolean enabled) {
+<span class="fc" id="L104">        this.enabled = enabled;</span>
+<span class="fc" id="L105">    }</span>
+
+    public Set&lt;Role&gt; getRoles() {
+<span class="fc" id="L108">        return roles;</span>
+    }
+
+    public void setRoles(Set&lt;Role&gt; roles) {
+<span class="fc" id="L112">        this.roles = roles;</span>
+<span class="fc" id="L113">    }</span>
+
+    // Helper
+    public void addRole(Role role) {
+<span class="fc" id="L117">        this.roles.add(role);</span>
+<span class="fc" id="L118">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

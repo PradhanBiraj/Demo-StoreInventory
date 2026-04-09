@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtAuthenticationEntryPoint.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inventory-store</a> &gt; <a href="index.source.html" class="el_package">com.myproject.store.security</a> &gt; <span class="el_source">JwtAuthenticationEntryPoint.java</span></div><h1>JwtAuthenticationEntryPoint.java</h1><pre class="source lang-java linenums">package com.myproject.store.security;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+
+@Component
+<span class="fc" id="L13">public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {</span>
+
+    @Override
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException authException) throws IOException, ServletException {
+
+<span class="fc" id="L19">        String acceptHeader = request.getHeader(&quot;Accept&quot;);</span>
+
+<span class="pc bpc" id="L21" title="3 of 4 branches missed.">        if (acceptHeader != null &amp;&amp; acceptHeader.contains(&quot;text/html&quot;)) {</span>
+<span class="nc bnc" id="L22" title="All 2 branches missed.">            if (request.getMethod().equalsIgnoreCase(&quot;GET&quot;)) {</span>
+                // Navigation: User is not logged in, send to login page
+<span class="nc" id="L24">                response.sendRedirect(&quot;/login&quot;);</span>
+            } else {
+                // Form/Function trigger: User is not logged in, show alert then redirect to
+                // login
+<span class="nc" id="L28">                response.setContentType(&quot;text/html;charset=UTF-8&quot;);</span>
+<span class="nc" id="L29">                response.getWriter().write(&quot;&lt;html&gt;&lt;body&gt;&lt;script type='text/javascript'&gt;&quot; +</span>
+                        &quot;alert('Security Alert: Your session has expired or you are not logged in. Please log in again.');&quot;
+                        +
+                        &quot;window.history.back();&quot; +
+                        &quot;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;&quot;);
+            }
+        } else {
+            // API request - send 401 Unauthorized
+<span class="fc" id="L37">            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, &quot;Unauthorized&quot;);</span>
+        }
+<span class="fc" id="L39">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StockMovementServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inventory-store</a> &gt; <a href="index.source.html" class="el_package">com.myproject.store.service.impl</a> &gt; <span class="el_source">StockMovementServiceImpl.java</span></div><h1>StockMovementServiceImpl.java</h1><pre class="source lang-java linenums">package com.myproject.store.service.impl;
+
+import com.myproject.store.model.Item;
+import com.myproject.store.model.StockMovement;
+import com.myproject.store.model.User;
+import com.myproject.store.repository.ItemRepository;
+import com.myproject.store.repository.StockMovementRepository;
+import com.myproject.store.repository.UserRepository;
+import com.myproject.store.service.StockMovementService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+public class StockMovementServiceImpl implements StockMovementService {
+
+    private final StockMovementRepository stockMovementRepository;
+    private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
+
+    public StockMovementServiceImpl(StockMovementRepository stockMovementRepository,
+            ItemRepository itemRepository,
+<span class="fc" id="L24">            UserRepository userRepository) {</span>
+<span class="fc" id="L25">        this.stockMovementRepository = stockMovementRepository;</span>
+<span class="fc" id="L26">        this.itemRepository = itemRepository;</span>
+<span class="fc" id="L27">        this.userRepository = userRepository;</span>
+<span class="fc" id="L28">    }</span>
+
+    @Override
+    @Transactional
+    public StockMovement recordStockIn(Item item, int quantity, String reason, String username) {
+<span class="fc" id="L33">        User user = userRepository.findByUsername(username).orElse(null);</span>
+
+<span class="fc" id="L35">        item.setQuantity(item.getQuantity() + quantity);</span>
+<span class="fc" id="L36">        itemRepository.save(item);</span>
+
+<span class="fc" id="L38">        StockMovement movement = new StockMovement(item, StockMovement.MovementType.IN, quantity, reason, user);</span>
+<span class="fc" id="L39">        return stockMovementRepository.save(movement);</span>
+    }
+
+    @Override
+    @Transactional
+    public StockMovement recordStockOut(Item item, int quantity, String reason, String username) {
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (quantity &gt; item.getQuantity()) {</span>
+<span class="fc" id="L46">            throw new IllegalArgumentException(&quot;Insufficient stock. Available: &quot; + item.getQuantity());</span>
+        }
+<span class="fc" id="L48">        User user = userRepository.findByUsername(username).orElse(null);</span>
+
+<span class="fc" id="L50">        item.setQuantity(item.getQuantity() - quantity);</span>
+<span class="fc" id="L51">        itemRepository.save(item);</span>
+
+<span class="fc" id="L53">        StockMovement movement = new StockMovement(item, StockMovement.MovementType.OUT, quantity, reason, user);</span>
+<span class="fc" id="L54">        return stockMovementRepository.save(movement);</span>
+    }
+
+    @Override
+    public List&lt;StockMovement&gt; getMovementsForItem(Item item) {
+<span class="fc" id="L59">        return stockMovementRepository.findByItemOrderByCreatedAtDesc(item);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

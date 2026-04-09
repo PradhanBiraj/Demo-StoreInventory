@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inventory-store</a> &gt; <a href="index.source.html" class="el_package">com.myproject.store.controller</a> &gt; <span class="el_source">ItemController.java</span></div><h1>ItemController.java</h1><pre class="source lang-java linenums">package com.myproject.store.controller;
+
+import com.myproject.store.model.Category;
+import com.myproject.store.model.Item;
+import com.myproject.store.model.Supplier;
+import com.myproject.store.service.CategoryService;
+import com.myproject.store.service.ItemService;
+import com.myproject.store.service.SupplierService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping(&quot;/items&quot;)
+public class ItemController {
+
+    private final ItemService itemService;
+    private final CategoryService categoryService;
+    private final SupplierService supplierService;
+
+    public ItemController(ItemService itemService,
+                          CategoryService categoryService,
+<span class="fc" id="L25">                          SupplierService supplierService) {</span>
+<span class="fc" id="L26">        this.itemService = itemService;</span>
+<span class="fc" id="L27">        this.categoryService = categoryService;</span>
+<span class="fc" id="L28">        this.supplierService = supplierService;</span>
+<span class="fc" id="L29">    }</span>
+
+    @GetMapping
+    public String listItems(@RequestParam(value = &quot;search&quot;, required = false) String search,
+                            @RequestParam(value = &quot;categoryId&quot;, required = false) Long categoryId,
+                            @RequestParam(value = &quot;lowStock&quot;, required = false) Boolean lowStock,
+                            Model model) {
+
+        List&lt;Item&gt; items;
+
+<span class="fc bfc" id="L39" title="All 4 branches covered.">        if (search != null &amp;&amp; !search.isBlank()) {</span>
+<span class="fc" id="L40">            items = itemService.searchByName(search);</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        } else if (Boolean.TRUE.equals(lowStock)) {</span>
+<span class="fc" id="L42">            items = itemService.findLowStockItems();</span>
+        } else {
+<span class="fc" id="L44">            items = itemService.findAll();</span>
+        }
+
+<span class="fc" id="L47">        model.addAttribute(&quot;items&quot;, items);</span>
+<span class="fc" id="L48">        model.addAttribute(&quot;categories&quot;, categoryService.findAll());</span>
+<span class="fc" id="L49">        model.addAttribute(&quot;search&quot;, search);</span>
+<span class="fc" id="L50">        model.addAttribute(&quot;lowStock&quot;, lowStock);</span>
+
+<span class="fc" id="L52">        return &quot;items/list&quot;;</span>
+    }
+
+    @GetMapping(&quot;/new&quot;)
+    public String showCreateForm(Model model) {
+<span class="fc" id="L57">        model.addAttribute(&quot;item&quot;, new Item());</span>
+<span class="fc" id="L58">        model.addAttribute(&quot;categories&quot;, categoryService.findAll());</span>
+<span class="fc" id="L59">        model.addAttribute(&quot;suppliers&quot;, supplierService.findAll());</span>
+<span class="fc" id="L60">        model.addAttribute(&quot;formTitle&quot;, &quot;Create Item&quot;);</span>
+<span class="fc" id="L61">        return &quot;items/form&quot;;</span>
+    }
+
+    @PostMapping
+    public String createItem(@ModelAttribute(&quot;item&quot;) Item item,
+                             @RequestParam(&quot;categoryId&quot;) Long categoryId,
+                             @RequestParam(&quot;supplierId&quot;) Long supplierId) {
+<span class="fc" id="L68">        Category category = categoryService.findById(categoryId);</span>
+<span class="fc" id="L69">        Supplier supplier = supplierService.findById(supplierId);</span>
+<span class="fc" id="L70">        item.setCategory(category);</span>
+<span class="fc" id="L71">        item.setSupplier(supplier);</span>
+<span class="fc" id="L72">        itemService.save(item);</span>
+<span class="fc" id="L73">        return &quot;redirect:/items&quot;;</span>
+    }
+
+    @GetMapping(&quot;/edit/{id}&quot;)
+    public String showEditForm(@PathVariable Long id, Model model) {
+<span class="fc" id="L78">        Item item = itemService.findById(id);</span>
+<span class="fc" id="L79">        model.addAttribute(&quot;item&quot;, item);</span>
+<span class="fc" id="L80">        model.addAttribute(&quot;categories&quot;, categoryService.findAll());</span>
+<span class="fc" id="L81">        model.addAttribute(&quot;suppliers&quot;, supplierService.findAll());</span>
+<span class="fc" id="L82">        model.addAttribute(&quot;formTitle&quot;, &quot;Edit Item&quot;);</span>
+<span class="fc" id="L83">        return &quot;items/form&quot;;</span>
+    }
+
+    @PostMapping(&quot;/update/{id}&quot;)
+    public String updateItem(@PathVariable Long id,
+                             @ModelAttribute(&quot;item&quot;) Item item,
+                             @RequestParam(&quot;categoryId&quot;) Long categoryId,
+                             @RequestParam(&quot;supplierId&quot;) Long supplierId) {
+<span class="fc" id="L91">        item.setId(id);</span>
+<span class="fc" id="L92">        Category category = categoryService.findById(categoryId);</span>
+<span class="fc" id="L93">        Supplier supplier = supplierService.findById(supplierId);</span>
+<span class="fc" id="L94">        item.setCategory(category);</span>
+<span class="fc" id="L95">        item.setSupplier(supplier);</span>
+<span class="fc" id="L96">        itemService.save(item);</span>
+<span class="fc" id="L97">        return &quot;redirect:/items&quot;;</span>
+    }
+
+    @PostMapping(&quot;/delete/{id}&quot;)
+    public String deleteItem(@PathVariable Long id) {
+<span class="fc" id="L102">        itemService.deleteById(id);</span>
+<span class="fc" id="L103">        return &quot;redirect:/items&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

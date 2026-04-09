@@ -26,15 +26,22 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Test & Coverage') {
             steps {
-                bat 'mvn test'
+                bat 'mvn clean test jacoco:report'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                // Assuming sonar settings are configured in Jenkins or via pom.
+                bat 'mvn sonar:sonar'
             }
         }
 
         stage('Package') {
             steps {
-                bat 'mvn package'
+                bat 'mvn package -DskipTests'
             }
         }
     }
@@ -42,7 +49,7 @@ pipeline {
     post {
         always {
             junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
-            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true, allowEmptyArchive: true
+            archiveArtifacts artifacts: 'target/*.jar, target/site/jacoco/**', fingerprint: true, allowEmptyArchive: true
         }
         success {
             echo 'Spring Boot Maven build completed successfully.'

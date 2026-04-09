@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inventory-store</a> &gt; <a href="index.source.html" class="el_package">com.myproject.store.service.impl</a> &gt; <span class="el_source">ItemServiceImpl.java</span></div><h1>ItemServiceImpl.java</h1><pre class="source lang-java linenums">package com.myproject.store.service.impl;
+
+import com.myproject.store.model.Item;
+import com.myproject.store.repository.ItemRepository;
+import com.myproject.store.service.ItemService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class ItemServiceImpl implements ItemService {
+
+    private final ItemRepository itemRepository;
+
+<span class="fc" id="L15">    public ItemServiceImpl(ItemRepository itemRepository) {</span>
+<span class="fc" id="L16">        this.itemRepository = itemRepository;</span>
+<span class="fc" id="L17">    }</span>
+
+    @Override
+    public List&lt;Item&gt; findAll() {
+<span class="fc" id="L21">        return itemRepository.findAll();</span>
+    }
+
+    @Override
+    public Item findById(Long id) {
+<span class="fc" id="L26">        return itemRepository.findById(id)</span>
+<span class="fc" id="L27">                .orElseThrow(() -&gt; new RuntimeException(&quot;Item not found with id: &quot; + id));</span>
+    }
+
+    @Override
+    public Item save(Item item) {
+<span class="fc" id="L32">        return itemRepository.save(item);</span>
+    }
+
+    @Override
+    public void deleteById(Long id) {
+<span class="fc" id="L37">        itemRepository.deleteById(id);</span>
+<span class="fc" id="L38">    }</span>
+
+    @Override
+    public List&lt;Item&gt; searchByName(String name) {
+<span class="fc" id="L42">        return itemRepository.findByNameContainingIgnoreCase(name);</span>
+    }
+
+    @Override
+    public List&lt;Item&gt; findLowStockItems() {
+        // threshold will be handled by DashboardService or using a config if needed
+<span class="fc" id="L48">        return itemRepository.findByQuantityLessThan(5);</span>
+    }
+
+    @Override
+    public List&lt;Item&gt; findRecentItems(int limit) {
+<span class="fc" id="L53">        List&lt;Item&gt; items = itemRepository.findTop5ByOrderByCreatedAtDesc();</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        return items.size() &gt; limit ? items.subList(0, limit) : items;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

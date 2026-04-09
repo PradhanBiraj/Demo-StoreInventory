@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StockMovement.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inventory-store</a> &gt; <a href="index.source.html" class="el_package">com.myproject.store.model</a> &gt; <span class="el_source">StockMovement.java</span></div><h1>StockMovement.java</h1><pre class="source lang-java linenums">package com.myproject.store.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = &quot;stock_movements&quot;)
+public class StockMovement {
+
+<span class="fc" id="L10">    public enum MovementType {</span>
+<span class="fc" id="L11">        IN,</span>
+<span class="fc" id="L12">        OUT</span>
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = &quot;item_id&quot;)
+    private Item item;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    private MovementType type;
+
+    @Column(nullable = false)
+    private Integer quantity;
+
+    @Column(length = 255)
+    private String reason;
+
+    @Column(name = &quot;created_at&quot;, nullable = false)
+    private LocalDateTime createdAt;
+
+    // Who performed this movement (user)
+    @ManyToOne
+    @JoinColumn(name = &quot;user_id&quot;)
+    private User performedBy;
+
+<span class="fc" id="L41">    public StockMovement() {</span>
+<span class="fc" id="L42">    }</span>
+
+<span class="fc" id="L44">    public StockMovement(Item item, MovementType type, Integer quantity, String reason, User performedBy) {</span>
+<span class="fc" id="L45">        this.item = item;</span>
+<span class="fc" id="L46">        this.type = type;</span>
+<span class="fc" id="L47">        this.quantity = quantity;</span>
+<span class="fc" id="L48">        this.reason = reason;</span>
+<span class="fc" id="L49">        this.performedBy = performedBy;</span>
+<span class="fc" id="L50">    }</span>
+
+    @PrePersist
+    public void prePersist() {
+<span class="fc" id="L54">        this.createdAt = LocalDateTime.now();</span>
+<span class="fc" id="L55">    }</span>
+
+    // ===== Getters and Setters =====
+
+    public Long getId() {
+<span class="nc" id="L60">        return id;</span>
+    }
+
+    public Item getItem() {
+<span class="fc" id="L64">        return item;</span>
+    }
+
+    public void setItem(Item item) {
+<span class="fc" id="L68">        this.item = item;</span>
+<span class="fc" id="L69">    }</span>
+
+    public MovementType getType() {
+<span class="fc" id="L72">        return type;</span>
+    }
+
+    public void setType(MovementType type) {
+<span class="fc" id="L76">        this.type = type;</span>
+<span class="fc" id="L77">    }</span>
+
+    public Integer getQuantity() {
+<span class="fc" id="L80">        return quantity;</span>
+    }
+
+    public void setQuantity(Integer quantity) {
+<span class="fc" id="L84">        this.quantity = quantity;</span>
+<span class="fc" id="L85">    }</span>
+
+    public String getReason() {
+<span class="fc" id="L88">        return reason;</span>
+    }
+
+    public void setReason(String reason) {
+<span class="fc" id="L92">        this.reason = reason;</span>
+<span class="fc" id="L93">    }</span>
+
+    public LocalDateTime getCreatedAt() {
+<span class="fc" id="L96">        return createdAt;</span>
+    }
+
+    public User getPerformedBy() {
+<span class="fc" id="L100">        return performedBy;</span>
+    }
+
+    public void setPerformedBy(User performedBy) {
+<span class="fc" id="L104">        this.performedBy = performedBy;</span>
+<span class="fc" id="L105">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

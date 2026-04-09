@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Role.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">inventory-store</a> &gt; <a href="index.source.html" class="el_package">com.myproject.store.model</a> &gt; <span class="el_source">Role.java</span></div><h1>Role.java</h1><pre class="source lang-java linenums">package com.myproject.store.model;
+
+import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = &quot;roles&quot;)
+public class Role {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 50)
+    private String name; // e.g. ROLE_ADMIN, ROLE_STAFF
+
+<span class="fc" id="L18">    @ManyToMany(mappedBy = &quot;roles&quot;)</span>
+    private Set&lt;User&gt; users = new HashSet&lt;&gt;();
+
+<span class="fc" id="L21">    public Role() {</span>
+<span class="fc" id="L22">    }</span>
+
+<span class="fc" id="L24">    public Role(String name) {</span>
+<span class="fc" id="L25">        this.name = name;</span>
+<span class="fc" id="L26">    }</span>
+
+    // Getters / setters
+
+    public Long getId() {
+<span class="fc" id="L31">        return id;</span>
+    }
+
+    public String getName() {
+<span class="fc" id="L35">        return name;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L39">        this.id = id;</span>
+<span class="fc" id="L40">    }</span>
+
+    public void setName(String name) {
+<span class="fc" id="L43">        this.name = name;</span>
+<span class="fc" id="L44">    }</span>
+
+    public Set&lt;User&gt; getUsers() {
+<span class="fc" id="L47">        return users;</span>
+    }
+
+    public void setUsers(Set&lt;User&gt; users) {
+<span class="fc" id="L51">        this.users = users;</span>
+<span class="fc" id="L52">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
