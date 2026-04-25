@@ -26,7 +26,7 @@ pipeline {
             steps {
                 git branch: 'week-6-security',
                     credentialsId: 'OBS-token',
-                    url: "${https://github.com/PradhanBiraj/Demo-StoreInventory.git}"
+                    url: "${REPO_URL}"
             }
         }
 
