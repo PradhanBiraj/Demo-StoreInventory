@@ -81,7 +81,7 @@ pipeline {
                     copy /Y target\\${JAR_NAME} ${DEPLOY_PATH}
                 """
                 bat """
-                    powershell -Command "Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'java.exe' -and $_.CommandLine -match '${JAR_NAME}' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }"
+                    powershell -Command "Get-CimInstance Win32_Process | Where-Object { \$_.Name -eq 'java.exe' -and \$_.CommandLine -match '${JAR_NAME}' } | ForEach-Object { Stop-Process -Id \$_.ProcessId -Force }"
                 """
                 bat """
                     cd /d ${DEPLOY_PATH}
