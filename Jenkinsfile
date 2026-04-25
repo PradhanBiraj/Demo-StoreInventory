@@ -24,9 +24,9 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'week-4-jackakoo-sonarqube',
+                git branch: 'week-6-security',
                     credentialsId: 'OBS-token',
-                    url: "${REPO_URL}"
+                    url: "${https://github.com/PradhanBiraj/Demo-StoreInventory.git}"
             }
         }
 
