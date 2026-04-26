@@ -7,13 +7,13 @@ pipeline {
     }
 
     environment {
-    REPO_URL           = "https://github.com/PradhanBiraj/Demo-StoreInventory.git"
-    APP_DIR            = "."
-    JAR_NAME           = "store-0.0.1-SNAPSHOT.jar"
-    SONAR_PROJECT_KEY  = "inventory-store-week-6-security"
-    SONAR_PROJECT_NAME = "Inventory Store Week 6 Security"
-    DEPLOY_PATH        = "C:\\deployment\\inventory-store"
-    PORT               = "8081"
+        REPO_URL           = "https://github.com/PradhanBiraj/Demo-StoreInventory.git"
+        APP_DIR            = "."
+        JAR_NAME           = "store-0.0.1-SNAPSHOT.jar"
+        SONAR_PROJECT_KEY  = "inventory-store"
+        SONAR_PROJECT_NAME = "Inventory Store"
+        DEPLOY_PATH        = "C:\\deployment\\inventory-store"
+        PORT               = "8081"
     }
 
     triggers {
@@ -24,7 +24,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'week-6-security',
+                git branch: 'main',
                     credentialsId: 'OBS-token',
                     url: "${REPO_URL}"
             }
