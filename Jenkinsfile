@@ -41,7 +41,7 @@ pipeline {
         stage('Test') {
             steps {
                 dir("${APP_DIR}") {
-                    bat 'mvn test'
+                    bat 'mvn verify'
                 }
             }
             post {
