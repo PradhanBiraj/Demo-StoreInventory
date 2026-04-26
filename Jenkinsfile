@@ -59,6 +59,7 @@ pipeline {
                         mvn sonar:sonar ^
                         -Dsonar.projectKey=%SONAR_PROJECT_KEY% ^
                         -Dsonar.projectName="%SONAR_PROJECT_NAME%" ^
+                        -Dsonar.branch.name=week-6-security ^
                         -Dsonar.java.binaries=target/classes
                         '''
                     }
