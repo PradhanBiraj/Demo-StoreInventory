@@ -19,6 +19,7 @@ pipeline {
         REPORT_DIR         = "monitoring-reports"
     }
 
+//Test pipeline automation
     options {
         buildDiscarder(logRotator(numToKeepStr: '20'))
         timestamps()
